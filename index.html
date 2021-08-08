@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TODOアプリ</title>
+  <script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
+</head>
+<body>
+  <div id="app">
+    <h2>TODOアプリ</h2>
+    <div>
+      <span>タスク名：</span><input type="text" v-model="name">
+      <span>推定時間（分）：</span><input type="text" v-model="time">
+      <br>
+      <button @click="addTask">追加</button>
+    </div>
+    <todo-table :task-list="taskList"></todo-table>
+  </div>
+  <script>
+    Vue.component('todo-table', {
+      props: {
+        taskList: {
+          type: Array
+        }
+      },
+      template: `
+        <table>
+          <tr>
+            <th>タスク</th>
+            <th>推定時間（分）</th>
+          </tr>
+          <tr v-for="(task, index) in taskList" :key="index">
+            <td>{{ task.name }}</td>
+            <td>{{ task.time }}分</td>
+          </tr>
+        </table>
+      `
+    })
+    new Vue({
+      el: '#app',
+      data() {
+        return {
+          name: '',
+          time: '60',
+          taskList: []
+        }
+      },
+      methods: {
+        addTask() {
+          const name = this.name.trim();
+          const time = this.time.trim();
+          if (name === '' || time === '') {
+            this.name = '';
+            this.time = '60';
+            return;
+          }
+          const task = {
+            name: name,
+            time: time
+          }
+          this.taskList.push(task);
+          this.name = '';
+          this.time = '60';
+        }
+      }
+    });
+  </script>
+</body>
+</html>
